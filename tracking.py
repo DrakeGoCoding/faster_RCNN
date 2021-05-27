@@ -26,6 +26,7 @@ def shape_to_np(shape, dtype="int"):
     # return the list of (x, y)-coordinates
     return coords
 
+
 #
 # detector = dlib.get_frontal_face_detector()  # replace with detector
 detector = ImageDetector(model='trained_model/snapshot_model_20180404.npz')
@@ -36,8 +37,8 @@ default_size = (int(v.stream.get(3)), int(v.stream.get(4)))
 
 size = default_size
 
-result = cv2.VideoWriter(os.path.splitext(result_path)[0] + '.avi',
-                         cv2.VideoWriter_fourcc(*'MPEG'),
+result = cv2.VideoWriter(os.path.splitext(vid_path)[0] + '_predicted.mp4',
+                         cv2.VideoWriter_fourcc(*'MP4V'),
                          10, size)
 
 time.sleep(2.0)
@@ -59,7 +60,7 @@ while vs.more():
     if frame is None:
         break
 
-    frame = cv2.resize(frame, size)
+    # frame = cv2.resize(frame, size)
 
     # Replace this with your detect
     faceRects = detector.detect(np.swapaxes(frame.astype(np.float32), 0, 2))
@@ -69,10 +70,10 @@ while vs.more():
     # cv2.rectangle(frame, (20, 20), (100, 100),
     #               (235, 168, 58), 2)
 
-    for (_, fX, fY, fW, fH) in faceRects:
+    for (s, x, y, w, h) in faceRects:
         # extract the face ROI
-        faceROI = frame[fY:fY + fH, fX:fX + fW]
-        cv2.rectangle(frame, (fX, fY), (fX + fW, fY + fH),
+        faceROI = frame[y:y + h, x:x + w]
+        cv2.rectangle(frame, (x, y), (x + w, y + h),
                       (0, 255, 0), 2)
         # apply eyes detection to the face ROI
         # eyeRects = detectors["eyes"].detectMultiScale(

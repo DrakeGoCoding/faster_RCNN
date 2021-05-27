@@ -10,3 +10,4 @@ WIDER_val/
 *.log
 donelist.txt
 trained_model/
+cupy/

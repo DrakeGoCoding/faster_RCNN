@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plot
 import os
 import chainer
+
 import download_model
 
 from chainercv.links import FasterRCNNVGG16
@@ -42,14 +43,15 @@ class ImageDetector:
             else:
                 raise
 
-    def detect(self, img, gpu=-1):
+    def detect(self, image, gpu=-1):
         if gpu >= 0:
             self.model.to_gpu(gpu)
             chainer.cuda.get_device(gpu).use()
 
-        # img = utils.read_image(image, color=True)
+        img = utils.read_image(image, color=True)
         bboxes, labels, scores = self.model.predict([img])
         bbox, label, score = bboxes[0], labels[0], scores[0]
+
         # vis_bbox(img, bbox, label, score, label_names=('face',))
         # plot.show()
 
