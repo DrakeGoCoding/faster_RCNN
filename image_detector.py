@@ -42,15 +42,14 @@ class ImageDetector:
             else:
                 raise
 
-    def detect(self, image, gpu):
+    def detect(self, img, gpu=-1):
         if gpu >= 0:
             self.model.to_gpu(gpu)
             chainer.cuda.get_device(gpu).use()
 
-        img = utils.read_image(image, color=True)
+        # img = utils.read_image(image, color=True)
         bboxes, labels, scores = self.model.predict([img])
         bbox, label, score = bboxes[0], labels[0], scores[0]
-
         # vis_bbox(img, bbox, label, score, label_names=('face',))
         # plot.show()
 
@@ -62,6 +61,4 @@ class ImageDetector:
             return_list.append([s, x_min, y_min, w, h])
 
         return return_list
-
-
 
